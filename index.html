@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+</head>
+<style media="screen">
+    *{
+        padding: 0;
+        margin: 0;
+    }
+    .box{
+        margin: 0 auto;
+    }
+    table{
+        text-align: center;
+    }
+    input{
+        text-align: center;
+    }
+    th{
+        color: red;
+        font-weight: bold;
+    }
+</style>
+
+<body>
+    <div class="box" id="box">
+        <table>
+            <tr>
+                <th>成本： <input type="number" name="" v-model="chengben"> </th>
+                <th>国内运费： <input type="number" name="" v-model="yunfei"> </th>
+                <th>重量： <input type="text" name="" v-model="zhongliang"> </th>
+                <th>利润率： <input type="number" name="" v-model="lirun"></th>
+            </tr>
+            <tr>
+                <td>首重价格： <input type="number" name="" v-model="shoujiage"> </td>
+                <td>加重价格： <input type="number" name="" v-model="jiajiage"></td>
+                <td>国际运费 <input type="number" name="" v-model="guoji"></td>
+            </tr>
+            <tr>
+                <td>亚马逊佣金： <input type="number" name="" v-model="yongjin"></td>
+                <td>欧元汇率： <input type="number" name="" v-model="ouhui"></td>
+                <td>英镑汇率： <input type="number" name="" v-model="yinghui"></td>
+                <td>日元汇率： <input type="number" name="" v-model="rihui"></td>
+            </tr>
+            <tr>
+                <td>JPU： <input type="number" name="" v-model="riyuan"></td>
+                <td>EUR： <input type="number" name="" v-model="ouyuan"></td>
+                <td>GBP： <input type="number" name="" v-model="yingbang"></td>
+
+            </tr>
+        </table>
+    </div>
+
+</body>
+<script type="text/javascript" src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+<script type="text/javascript">
+    var vm = new Vue({
+        el: '#box',
+        data: {
+            chengben:0,
+            yunfei:0,
+            zhongliang:0,
+            //首重价格
+            shoujiage:80,
+            jiajiage:60,
+            guoji:0,
+            yongjin:0.85,
+            ouhui:7.8,
+            yinghui:8.8,
+            rihui:0.07,
+            lirun:1.5,
+            ouyuan:0,
+            yingbang:0,
+            riyuan:0,
+        },
+        methods: {
+            sunOuyuan:function () {
+                var zhongliangTemp = parseFloat(vm.zhongliang)-1;
+                console.log("重量："+parseFloat(vm.zhongliang));
+                console.log("除去首重外其他重量:"+zhongliangTemp);
+                if (zhongliangTemp > 0) {
+                    vm.guoji = zhongliangTemp * vm.jiajiage + vm.shoujiage;
+                }else {
+                    vm.guoji = vm.shoujiage;
+                }
+                console.log("国际运费：" + vm.guoji);
+                var chengbenTemp = parseInt(vm.chengben) + parseInt(vm.yunfei) + parseInt(vm.guoji);
+                console.log('基础成本：' + chengbenTemp);
+                vm.ouyuan = chengbenTemp / vm.yongjin/vm.ouhui * vm.lirun;
+                vm.yingbang = chengbenTemp / vm.yongjin/vm.yinghui * vm.lirun;
+                vm.riyuan = chengbenTemp / vm.yongjin/vm.rihui * vm.lirun;
+            }
+        },
+        watch: {
+            chengben() {
+                vm.sunOuyuan();
+            },
+            yunfei() {
+                vm.sunOuyuan();
+            },
+            zhongliang(){
+                vm.sunOuyuan();
+            },
+            lirun(){
+                vm.sunOuyuan();
+            }
+
+        }
+    });
+</script>
+
+</html>
